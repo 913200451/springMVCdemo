@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="spring.dao.CollageDao">
+    <select id="SelectAll" resultType="CollagePojo">
+        select * from collages
+    </select>
+    <select id="SelectById" resultType="CollagePojo" parameterType="int">
+        select * from collages where id=#{id};
+    </select>
+
+</mapper>
