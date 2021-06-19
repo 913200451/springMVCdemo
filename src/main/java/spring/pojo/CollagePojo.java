@@ -10,6 +10,7 @@ public class CollagePojo {
     String title_isbold;
     String subtitle_size;
     String subtitle_isbold;
+    String formatdiscribe;
 
     @Override
     public String toString() {
@@ -23,8 +24,18 @@ public class CollagePojo {
                 ", title_isbold='" + title_isbold + '\'' +
                 ", subtitle_size='" + subtitle_size + '\'' +
                 ", subtitle_isbold='" + subtitle_isbold + '\'' +
+                ", formatdiscribe='" + formatdiscribe + '\'' +
                 '}';
     }
+
+    public String getFormatdiscribe() {
+        return formatdiscribe;
+    }
+
+    public void setFormatdiscribe(String formatdiscribe) {
+        this.formatdiscribe = formatdiscribe;
+    }
+
 
     public int getId() {
         return id;

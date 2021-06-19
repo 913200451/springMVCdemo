@@ -1,4 +1,5 @@
 package spring.controller;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,8 @@ import spring.service.FileUploadService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -56,6 +59,44 @@ public class UploadController {
         mv.setViewName("show");
         return mv;
     }
+    @RequestMapping(value = "/springUpload/android.do",produces = { "text/html;charset=utf-8" })
+    public String uploadforandroid(@RequestParam MultipartFile file,@RequestParam("id") String id) throws Exception {
+        String location=System.getProperty("os.name");
+        String savelocation;
+        if(location.equals("Windows 10")) savelocation="E:/javatest/";
+        else savelocation="/home/springfiles/";
+        List<String> list=new ArrayList<String>();
+        ModelAndView mv = new ModelAndView();
+        int sid=Integer.parseInt(id);
+        if(file==null)
+        {
+            mv.setViewName("error");
+            mv.addObject("reason","文件为空！");
+            return JSONObject.toJSONString(mv.getModel());
+        }
+        if(!TypecheckUtil.checktype(file))
+        {
+            mv.setViewName("error");
+            mv.addObject("reason","不是docx文件！");
+            return JSONObject.toJSONString(mv.getModel());
+        }
 
+        File nfile=new File(savelocation + UUID.randomUUID() + file.getOriginalFilename().substring(0, file.getOriginalFilename().lastIndexOf("."))+".zip");
+        File dec = new File(nfile.getParent()+"/unzip/"+nfile.getName().substring(0, nfile.getName().lastIndexOf(".")));
+        try {
+            file.transferTo(nfile);
+            UnzipUtil.decompression(nfile.toString(),dec.toString());
+            nfile.delete();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mv = checkService.checkline(new File(dec.getAbsolutePath()+"/word/document.xml"),sid,mv);
+        mv = checkService.checktitles(new File(dec.getAbsolutePath()+"/word/document.xml"),sid,mv);
+        DelUtil.delFolder(dec.getAbsolutePath());
+        mv.setViewName("show");
+        return JSONObject.toJSONString(mv.getModel());
+    }
 
 }

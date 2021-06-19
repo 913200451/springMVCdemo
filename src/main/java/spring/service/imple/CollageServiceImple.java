@@ -15,4 +15,9 @@ public class CollageServiceImple implements CollageService {
     public List<CollagePojo> SelectAll() {
         return collageDao.SelectAll();
     }
+
+    @Override
+    public CollagePojo SelectById(int id) {
+        return collageDao.SelectById(id);
+    }
 }
